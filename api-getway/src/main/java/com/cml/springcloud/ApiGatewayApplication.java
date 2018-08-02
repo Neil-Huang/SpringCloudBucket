@@ -1,5 +1,6 @@
 package com.cml.springcloud;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
@@ -20,9 +21,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableHystrix
 //@EnableHystrixDashboard
 @EnableCircuitBreaker
-public class ZuulClientApplication {
+public class ApiGatewayApplication {
+	//ZuulClientApplication
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(ZuulClientApplication.class).web(true).run(args);
+		SpringApplication.run(ApiGatewayApplication.class,args);
 	}
 	@Configuration
 	public static class SecurityPermitAllConfig extends WebSecurityConfigurerAdapter {

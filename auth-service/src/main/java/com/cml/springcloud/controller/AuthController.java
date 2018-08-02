@@ -17,54 +17,56 @@ import com.cml.springcloud.model.result.AuthResult;
 @RequestMapping("/auth")
 public class AuthController {
 
-	protected static Logger logger = LoggerFactory.getLogger(AuthController.class);
+    protected static Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-	@Autowired
-	private AccessTokenAuthManager authTokenManager;
+    @Autowired
+    private AccessTokenAuthManager authTokenManager;
 
-	@Autowired
-	private DiscoveryClient client;
+    @Autowired
+    private DiscoveryClient client;
 
-	@ResponseBody
-	@RequestMapping("/info")
-	public Object info() {
-		return client.getServices();
-	}
+    @ResponseBody
+    @RequestMapping("/info")
+    public Object info() {
+        return client.getServices();
+    }
 
-	/**
-	 * 解密信息
-	 * 
-	 * @param token
-	 * @return
-	 */
-	@RequestMapping("/decodeToken")
-	@ResponseBody
-	public AuthResult decodeToken(String token) {
-		AuthResult authModel = new AuthResult();
-		authModel.setStatus(HttpServletResponse.SC_OK);
-		try {
-			authModel.setToken(authTokenManager.parseToken(token));
-		} catch (Exception e) {
-			logger.warn("decodeTokenFail", e);
-			authModel.setErrMsg("invalid token!!!");
-			authModel.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		}
-		return authModel;
-	}
+    /**
+     * 解密信息
+     *
+     * @param token
+     * @return
+     */
+    @RequestMapping("/decodeToken")
+    @ResponseBody
+    public AuthResult decodeToken(String token) {
+        logger.debug("- decodeToken:" + token);
+        AuthResult authModel = new AuthResult();
+        authModel.setStatus(HttpServletResponse.SC_OK);
+        try {
+            authModel.setToken(authTokenManager.parseToken(token));
+        } catch (Exception e) {
+            logger.warn("decodeTokenFail", e);
+            authModel.setErrMsg("invalid token!!!");
+            authModel.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        return authModel;
+    }
 
-	/**
-	 * 生成加密信息
-	 * 
-	 * @param token
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/encodeToken")
-	@ResponseBody()
-	public AuthResult encodeToken(String token) throws Exception {
-		AuthResult authModel = new AuthResult();
-		authModel.setStatus(HttpServletResponse.SC_OK);
-		authModel.setToken(authTokenManager.generateToken(token));
-		return authModel;
-	}
+    /**
+     * 生成加密信息
+     *
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/encodeToken")
+    @ResponseBody()
+    public AuthResult encodeToken(String token) throws Exception {
+        logger.debug("- encodeToken:" + token);
+        AuthResult authModel = new AuthResult();
+        authModel.setStatus(HttpServletResponse.SC_OK);
+        authModel.setToken(authTokenManager.generateToken(token));
+        return authModel;
+    }
 }
